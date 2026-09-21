@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="Mark Dahuya builds AI automations in Zapier for salons, barbershops and spas: inquiry replies, booking reminders, invoice logging and review alerts.">
+<title>Mark Dahuya | AI automation for salons and spas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,300..800&family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #F5F2FA;
+    --surface: #FFFFFF;
+    --tint: #EBE4F5;
+    --ink: #251638;
+    --muted: #5C4E70;
+    --line: #DDD4EA;
+    --accent: #B0306A;
+    --accent-ink: #FFFFFF;
+    --ok: #2F7A63;
+    --spark: #E8590C;
+    --ui: 'Bricolage Grotesque', 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif;
+    --body: 'Newsreader', Georgia, 'Times New Roman', serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #170E24;
+      --surface: #22153A;
+      --tint: #2B1D45;
+      --ink: #F0E9FA;
+      --muted: #B9ABCF;
+      --line: #3A2A57;
+      --accent: #F07AAE;
+      --accent-ink: #2A0F1D;
+      --ok: #6FCBA8;
+      --spark: #FF8A3D;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #170E24;
+    --surface: #22153A;
+    --tint: #2B1D45;
+    --ink: #F0E9FA;
+    --muted: #B9ABCF;
+    --line: #3A2A57;
+    --accent: #F07AAE;
+    --accent-ink: #2A0F1D;
+    --ok: #6FCBA8;
+    --spark: #FF8A3D;
+  }
+
+  :root {
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); scroll-behavior: smooth; }
+  *, *::before, *::after { box-sizing: inherit; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 1.125rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  a { color: inherit; }
+  a:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 clamp(1.1rem, 4vw, 2rem); }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .skip { position: absolute; left: 1rem; top: -4rem; background: var(--accent); color: var(--accent-ink); padding: .6rem 1rem; border-radius: 8px; font-family: var(--ui); z-index: 10; }
+  .skip:focus { top: 1rem; }
+
+  h1, h2, h3 { font-family: var(--ui); font-stretch: 85%; margin: 0; letter-spacing: -0.015em; }
+  h1 { font-size: clamp(2.5rem, 6.4vw, 4.6rem); line-height: 1.02; font-weight: 700; letter-spacing: -0.03em; max-width: 17ch; }
+  h2 { font-size: clamp(1.7rem, 3.4vw, 2.3rem); line-height: 1.12; font-weight: 700; }
+  h3 { font-size: 1.5rem; line-height: 1.2; font-weight: 700; }
+  p { margin: 0 0 1rem; }
+  .prose { max-width: 62ch; }
+  .muted { color: var(--muted); }
+
+  /* header */
+  .top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.4rem 0; flex-wrap: wrap; }
+  .brand { font-family: var(--ui); font-weight: 700; font-size: 1.15rem; text-decoration: none; }
+  .nav { display: flex; gap: 1.5rem; font-family: var(--ui); font-size: .98rem; }
+  .nav a { text-decoration: none; color: var(--muted); }
+  .nav a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; }
+
+  /* hero */
+  .hero { padding: clamp(2.2rem, 6vw, 4.5rem) 0 2rem; }
+  .hero .lede { font-size: 1.3rem; max-width: 56ch; margin-top: 1.5rem; color: var(--muted); }
+
+  /* demo */
+  .demo { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: clamp(1.1rem, 3vw, 2rem); }
+  .demo h2 { font-size: 1.5rem; margin-bottom: 1.4rem; }
+  .demo-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(1.5rem, 4vw, 3rem); }
+  fieldset { border: 0; padding: 0; margin: 0 0 1rem; min-width: 0; }
+  legend { font-family: var(--ui); font-weight: 600; font-size: .98rem; padding: 0; margin-bottom: .5rem; }
+  .pick { display: block; position: relative; margin-bottom: .5rem; }
+  .pick input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+  .pick span { display: block; border: 1px solid var(--line); border-radius: 10px; padding: .6rem .9rem; font-family: var(--ui); font-size: .98rem; background: var(--bg); }
+  .pick input:checked + span { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); font-weight: 600; }
+  .pick input:focus-visible + span { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .pick input:disabled { cursor: default; }
+  .msg { background: var(--tint); border-radius: 12px; padding: 1rem 1.1rem; margin-bottom: 1.1rem; }
+  .msg .who { font-family: var(--ui); font-size: .9rem; color: var(--muted); margin: 0 0 .3rem; }
+  .msg .text { margin: 0; font-size: 1.05rem; line-height: 1.55; }
+  .btn { font-family: var(--ui); font-weight: 600; font-size: 1rem; background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 10px; padding: .85rem 1.3rem; cursor: pointer; }
+  .btn:hover:not(:disabled) { filter: brightness(1.08); }
+  .btn:disabled { opacity: .6; cursor: default; }
+
+  .steps { list-style: none; margin: 0; padding: 0; position: relative; }
+  .steps::before { content: ""; position: absolute; left: calc(.6rem - 1px); top: .9rem; bottom: .9rem; width: 2px; background: var(--line); }
+  .steps li { position: relative; padding: 0 0 1rem 2.2rem; line-height: 1.35; min-height: 2.4rem; }
+  .steps li:last-child { padding-bottom: 0; }
+  .steps li::before { content: ""; position: absolute; left: 0; top: .15rem; width: 1.2rem; height: 1.2rem; border-radius: 50%; border: 2px solid var(--line); background: var(--surface); }
+  .steps b { display: block; font-family: var(--ui); font-size: 1rem; }
+  .steps span { font-size: .98rem; color: var(--muted); }
+  .steps li[data-state="running"]::before { border-color: var(--spark); animation: pulse 1s ease-in-out infinite; }
+  .steps li[data-state="done"]::before { border-color: var(--ok); background: var(--ok); }
+  .steps li[data-state="done"]::after { content: ""; position: absolute; left: .4rem; top: .32rem; width: .35rem; height: .65rem; border: solid var(--surface); border-width: 0 2px 2px 0; transform: rotate(45deg) scale(.8); }
+  @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(232, 89, 12, .55); } 50% { box-shadow: 0 0 0 7px rgba(232, 89, 12, 0); } }
+
+  .out { margin-top: 1.5rem; border-top: 1px solid var(--line); padding-top: 1.1rem; min-height: 5rem; }
+  .out .empty { color: var(--muted); font-size: 1rem; margin: 0; }
+  .out .block { animation: rise .35s ease-out both; margin-bottom: 1rem; }
+  .out .block:last-child { margin-bottom: 0; }
+  .out h4 { font-family: var(--ui); font-size: .95rem; font-weight: 600; margin: 0 0 .4rem; }
+  .chip { display: inline-block; padding: .1rem .75rem; border-radius: 999px; background: var(--tint); font-family: var(--ui); font-weight: 600; font-size: .9rem; margin: 0 .4rem .3rem 0; }
+  .chip.hot { background: var(--accent); color: var(--accent-ink); }
+  .draft { border-left: 3px solid var(--accent); padding: .1rem 0 .1rem 1rem; white-space: pre-line; font-size: 1.02rem; line-height: 1.55; margin: 0; }
+  .alert { background: var(--tint); border-radius: 10px; padding: .7rem 1rem; font-size: 1rem; line-height: 1.5; margin: 0; }
+  @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  /* sections */
+  .sec { padding: clamp(2.8rem, 7vw, 5rem) 0 0; }
+  .sec-head { max-width: 62ch; margin-bottom: 1rem; }
+  .sec-head p { color: var(--muted); margin-top: .8rem; }
+
+  .case { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(1.5rem, 4vw, 4rem); padding: 2.6rem 0; border-top: 1px solid var(--line); }
+  .case:last-of-type { padding-bottom: 0; }
+  .case .tag { font-family: var(--ui); color: var(--muted); font-size: .98rem; margin: .5rem 0 1.4rem; }
+  .flow { list-style: none; margin: 0; padding: 0; position: relative; font-family: var(--ui); font-size: .98rem; }
+  .flow::before { content: ""; position: absolute; left: calc(.35rem - 1px); top: .7rem; bottom: .7rem; width: 2px; background: var(--line); }
+  .flow li { position: relative; padding: 0 0 .7rem 1.6rem; line-height: 1.35; }
+  .flow li:last-child { padding-bottom: 0; }
+  .flow li::before { content: ""; position: absolute; left: 0; top: .35rem; width: .7rem; height: .7rem; border-radius: 50%; background: var(--accent); }
+  .flow small { display: block; color: var(--muted); font-size: .9rem; }
+  dl.facts { margin: 0; }
+  dl.facts dt { font-family: var(--ui); font-weight: 700; font-size: 1rem; margin-top: 1.1rem; }
+  dl.facts dt:first-child { margin-top: 0; }
+  dl.facts dd { margin: .2rem 0 0; max-width: 58ch; }
+  figure.sample { margin: 1.6rem 0 0; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: .5rem .9rem .8rem; }
+  figure.sample figcaption { font-family: var(--ui); font-size: .88rem; color: var(--muted); padding-top: .5rem; }
+  .scroll { overflow-x: auto; max-width: 100%; }
+  table { border-collapse: collapse; width: 100%; font-family: var(--ui); font-size: .95rem; min-width: 30rem; }
+  th { text-align: left; font-weight: 600; color: var(--muted); padding: .55rem .8rem .55rem 0; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  td { padding: .55rem .8rem .55rem 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: 0; }
+  .msgs p { font-size: 1rem; line-height: 1.55; margin: .35rem 0 .9rem; padding-left: .9rem; border-left: 3px solid var(--line); }
+  .msgs p:last-child { margin-bottom: 0; }
+  .msgs strong { display: block; font-family: var(--ui); font-size: .9rem; color: var(--muted); font-weight: 600; }
+
+  /* approach */
+  .two { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(1.5rem, 4vw, 4rem); }
+  .method { margin: 0 0 1.5rem; padding: 0; list-style: none; counter-reset: m; }
+  .method li { counter-increment: m; position: relative; padding-left: 2.6rem; margin-bottom: 1.1rem; }
+  .method li::before { content: counter(m); position: absolute; left: 0; top: .05rem; width: 1.8rem; height: 1.8rem; border-radius: 50%; background: var(--tint); font-family: var(--ui); font-weight: 700; font-size: .95rem; display: grid; place-items: center; }
+  .method b { font-family: var(--ui); }
+
+  .pk-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(1.2rem, 3vw, 2.5rem); margin-top: 1.6rem; }
+  .pk { border-top: 2px solid var(--ink); padding-top: 1rem; }
+  .pk.wide { border-top-color: var(--accent); }
+  .pk h3 { font-size: 1.25rem; margin-bottom: .5rem; }
+  .pk p { color: var(--muted); font-size: 1.02rem; }
+  .pk ul { margin: 0; padding-left: 1.1rem; font-size: 1.02rem; }
+
+  .contact { padding-bottom: clamp(3rem, 7vw, 5rem); }
+  .mail { display: inline-block; font-family: var(--ui); font-stretch: 85%; font-weight: 700; font-size: clamp(1.5rem, 5vw, 2.7rem); line-height: 1.1; color: var(--accent); text-underline-offset: 6px; margin: .6rem 0 1.4rem; overflow-wrap: anywhere; }
+  .foot { border-top: 1px solid var(--line); padding: 1.4rem 0; font-family: var(--ui); font-size: .9rem; color: var(--muted); }
+
+  @media (max-width: 860px) {
+    .demo-grid, .case, .two { grid-template-columns: 1fr; }
+    .pk-grid { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="#top">Mark Dahuya</a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#demo">Live demo</a>
+      <a href="#projects">Projects</a>
+      <a href="#packages">Packages</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+</div>
+
+<main id="main">
+  <div class="wrap" id="top">
+
+    <section class="hero" aria-labelledby="hero-h">
+      <h1 id="hero-h">Your salon answers every inquiry within a minute.</h1>
+      <p class="lede">I'm Mark Dahuya. I build AI automations in Zapier for salons, barbershops and spas: replies to new inquiries, booking reminders, invoice logging and review alerts. Try the first one below.</p>
+    </section>
+
+    <section class="demo" id="demo" aria-labelledby="demo-h">
+      <h2 id="demo-h">A customer writes to Bloom Studio. Watch what happens next.</h2>
+      <div class="demo-grid">
+        <div>
+          <fieldset>
+            <legend>Pick an inquiry</legend>
+            <label class="pick"><input type="radio" name="sc" value="price" checked><span>Price and a Saturday slot</span></label>
+            <label class="pick"><input type="radio" name="sc" value="complaint"><span>Unhappy after a treatment</span></label>
+            <label class="pick"><input type="radio" name="sc" value="event"><span>Bridal trial for five people</span></label>
+          </fieldset>
+          <div class="msg">
+            <p class="who" id="msg-who"></p>
+            <p class="text" id="msg-text"></p>
+          </div>
+          <button class="btn" id="run" type="button">Run the automation</button>
+          <p class="sr-only" id="status" role="status"></p>
+        </div>
+        <div>
+          <ol class="steps" id="steps" aria-label="Automation steps">
+            <li data-state="idle"><b>Google Forms</b><span>New inquiry arrives</span></li>
+            <li data-state="idle"><b>Google Sheets</b><span>Row added to the lead log</span></li>
+            <li data-state="idle"><b>AI by Zapier</b><span>Sorts the inquiry by type and urgency</span></li>
+            <li data-state="idle"><b>AI by Zapier</b><span>Writes a reply in the salon's voice</span></li>
+            <li data-state="idle"><b>Gmail</b><span>Saves the reply as a draft for approval</span></li>
+            <li data-state="idle"><b>Slack</b><span>Alerts the owner</span></li>
+          </ol>
+          <div class="out" id="out"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" id="projects" aria-labelledby="projects-h">
+      <div class="sec-head">
+        <h2 id="projects-h">Four automations for one salon</h2>
+        <p>Bloom Studio is a fictional salon I created for these demos. Every workflow runs in Zapier on test data. Time estimates come from those test runs and are not client results.</p>
+      </div>
+
+      <article class="case">
+        <div>
+          <h3>Instant inquiry replies</h3>
+          <p class="tag">The demo above, built in Zapier</p>
+          <ul class="flow">
+            <li>Google Forms<small>New response</small></li>
+            <li>Google Sheets<small>Add row to the lead log</small></li>
+            <li>AI by Zapier<small>Classify the inquiry</small></li>
+            <li>AI by Zapier<small>Draft a reply</small></li>
+            <li>Gmail<small>Create draft</small></li>
+            <li>Slack<small>Send alert to the owner</small></li>
+          </ul>
+        </div>
+        <div>
+          <dl class="facts">
+            <dt>The problem</dt>
+            <dd>Inquiries arrive all day while every stylist is with a client. Replies wait until a break, and the customer books with whoever answers first.</dd>
+            <dt>What I built</dt>
+            <dd>Each form response is logged, sorted by type and urgency, and answered with a draft in the salon's own voice. The owner approves each message in Gmail with one click. Complaints and high-value leads trigger an immediate Slack alert.</dd>
+            <dt>What it saves</dt>
+            <dd>A reply is ready in under a minute, compared with about 20 minutes of typing spread across the day (estimate).</dd>
+          </dl>
+          <figure class="sample">
+            <div class="scroll">
+              <table>
+                <thead><tr><th>Customer</th><th>Category</th><th>Priority</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr><td>Lena</td><td>Pricing and booking</td><td>Normal</td><td>Draft ready</td></tr>
+                  <tr><td>Priya</td><td>Complaint</td><td>Urgent</td><td>Owner alerted</td></tr>
+                  <tr><td>Sofia</td><td>Event lead (bridal)</td><td>High value</td><td>Draft ready</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <figcaption>Lead log from a test run</figcaption>
+          </figure>
+        </div>
+      </article>
+
+      <article class="case">
+        <div>
+          <h3>Reminders that keep the chair full</h3>
+          <p class="tag">Bookings in, no-shows down</p>
+          <ul class="flow">
+            <li>Google Calendar<small>Event starts in 24 hours</small></li>
+            <li>AI by Zapier<small>Write a personal reminder</small></li>
+            <li>Gmail<small>Send the reminder</small></li>
+            <li>Delay by Zapier<small>Wait until 2 hours after the visit</small></li>
+            <li>Gmail<small>Send thank-you with survey link</small></li>
+          </ul>
+        </div>
+        <div>
+          <dl class="facts">
+            <dt>The problem</dt>
+            <dd>A forgotten appointment leaves an empty chair and lost income, and nobody has time to send reminders by hand.</dd>
+            <dt>What I built</dt>
+            <dd>Every booking on the salon calendar gets a friendly reminder the day before, using the customer's name, service and stylist. After the visit, a thank-you email invites a one-minute survey.</dd>
+            <dt>How I'd measure it</dt>
+            <dd>Compare the no-show rate over four weeks before and four weeks after switching the reminders on.</dd>
+          </dl>
+          <figure class="sample msgs">
+            <p><strong>Reminder, sent 24 hours before</strong>Hi Mira, see you tomorrow at 2:00 pm for your cut and color with Aiko at Bloom Studio. Please arrive five minutes early. If you need to change the time, reply to this email and we'll find another slot.</p>
+            <p><strong>Thank-you, sent 2 hours after</strong>Thanks for visiting today, Mira! It would help us a lot to hear how it went. The survey takes one minute.</p>
+            <figcaption>Messages from a test run</figcaption>
+          </figure>
+        </div>
+      </article>
+
+      <article class="case">
+        <div>
+          <h3>Supplier invoices logged for you</h3>
+          <p class="tag">Month-end bookkeeping without the inbox dig</p>
+          <ul class="flow">
+            <li>Gmail<small>New email with attachment</small></li>
+            <li>AI by Zapier<small>Read vendor, date and total</small></li>
+            <li>Google Sheets<small>Add row to the expense log</small></li>
+            <li>Filter by Zapier<small>Continue only if total is over the limit</small></li>
+            <li>Slack<small>Flag the invoice for review</small></li>
+          </ul>
+        </div>
+        <div>
+          <dl class="facts">
+            <dt>The problem</dt>
+            <dd>Invoices for color, tools and towels pile up in an inbox. Someone spends hours at month-end finding them and typing the numbers into a sheet.</dd>
+            <dt>What I built</dt>
+            <dd>Invoices sent to a dedicated email label are read by AI and logged in an expense sheet. Anything above an owner-set amount is flagged so unusual costs get noticed the same day.</dd>
+            <dt>What it saves</dt>
+            <dd>Roughly five minutes of typing per invoice, plus fewer missed or duplicated entries (estimate).</dd>
+          </dl>
+          <figure class="sample">
+            <div class="scroll">
+              <table>
+                <thead><tr><th>Vendor</th><th>Date</th><th>Total</th><th>Flag</th></tr></thead>
+                <tbody>
+                  <tr><td>ColorPro Supply</td><td>3 Sep</td><td>412.80</td><td>Over limit, review</td></tr>
+                  <tr><td>Glow Towels Co.</td><td>5 Sep</td><td>86.40</td><td>OK</td></tr>
+                  <tr><td>Bright Blades</td><td>9 Sep</td><td>129.00</td><td>OK</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <figcaption>Expense log from a test run, limit set to 300</figcaption>
+          </figure>
+        </div>
+      </article>
+
+      <article class="case">
+        <div>
+          <h3>A feedback monitor that scores every response</h3>
+          <p class="tag">Quality evaluation for a small business</p>
+          <ul class="flow">
+            <li>Google Forms<small>New survey response</small></li>
+            <li>AI by Zapier<small>Score sentiment and tag the issue</small></li>
+            <li>Google Sheets<small>Add row to the feedback log</small></li>
+            <li>Slack<small>Instant alert on negative feedback</small></li>
+            <li>Schedule by Zapier<small>Every Monday morning</small></li>
+            <li>AI by Zapier<small>Summarize the week</small></li>
+            <li>Gmail<small>Email the summary to the owner</small></li>
+          </ul>
+        </div>
+        <div>
+          <dl class="facts">
+            <dt>The problem</dt>
+            <dd>Owners read reviews one at a time, so patterns stay hidden and a bad experience can sit unanswered for days.</dd>
+            <dt>What I built</dt>
+            <dd>Survey answers from the thank-you email are scored and tagged by issue: wait time, staff, price or cleanliness. Negative feedback reaches the owner within minutes with a suggested reply, and a weekly summary shows what keeps coming up. My background is call-center quality evaluation, so I designed the scoring the way I would review a customer interaction: accurate, fair and easy to act on.</dd>
+            <dt>What it saves</dt>
+            <dd>The owner spots problems the same day and gets a weekly view instead of reading every response (estimate: about 30 minutes a week).</dd>
+          </dl>
+          <figure class="sample">
+            <div class="scroll">
+              <table>
+                <thead><tr><th>Response</th><th>Sentiment</th><th>Issue</th><th>Action</th></tr></thead>
+                <tbody>
+                  <tr><td>Waited 40 minutes past my time</td><td>Negative</td><td>Wait time</td><td>Owner alerted</td></tr>
+                  <tr><td>Loved my cut, Aiko was great</td><td>Positive</td><td>Staff</td><td>Logged</td></tr>
+                  <tr><td>Color faded fast and it's pricey</td><td>Mixed</td><td>Price, quality</td><td>Logged</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <figcaption>Feedback log from a test run. Weekly summary example: wait time came up in 3 of 11 responses, mostly on Saturday afternoons.</figcaption>
+          </figure>
+        </div>
+      </article>
+    </section>
+
+    <section class="sec" aria-labelledby="how-h">
+      <div class="two">
+        <h2 id="how-h">How I work</h2>
+        <div>
+          <ol class="method">
+            <li><b>A 20-minute call.</b> We map where inquiries, bookings, invoices and reviews land today, and pick the one slow spot worth fixing first.</li>
+            <li><b>Build and test on sample data.</b> Nothing touches live customers until you've seen it work. Anything customer-facing starts as a draft you approve.</li>
+            <li><b>Hand-off you can use.</b> You get a short video walkthrough and a one-page guide, so you can pause or edit any automation yourself.</li>
+          </ol>
+          <p class="prose muted">I use Zapier, Google Workspace, Gmail and Slack, so there's nothing new to learn and no server to maintain.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" id="packages" aria-labelledby="pk-h">
+      <div class="sec-head">
+        <h2 id="pk-h">Packages</h2>
+        <p>Fixed prices, quoted after the first call.</p>
+      </div>
+      <div class="pk-grid">
+        <div class="pk">
+          <h3>One automation</h3>
+          <p>A single workflow, built, tested and handed off.</p>
+          <ul>
+            <li>Inquiry replies, reminders, invoice log or feedback monitor</li>
+            <li>Video walkthrough and one-page guide</li>
+          </ul>
+        </div>
+        <div class="pk wide">
+          <h3>Front desk bundle</h3>
+          <p>Inquiry replies, reminders and the feedback monitor, working together.</p>
+          <ul>
+            <li>Survey link sent automatically after each visit</li>
+            <li>One weekly summary for the owner</li>
+            <li>Video walkthrough and one-page guide</li>
+          </ul>
+        </div>
+        <div class="pk">
+          <h3>Monthly care</h3>
+          <p>I keep your automations running and improving.</p>
+          <ul>
+            <li>Fixes when an app connection breaks</li>
+            <li>Wording changes to AI replies</li>
+            <li>A short monthly report</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec contact" id="contact" aria-labelledby="contact-h">
+      <h2 id="contact-h">Tell me where inquiries slow down</h2>
+      <p class="prose muted" style="margin-top:.8rem">Send a few lines about your salon and where messages pile up. I'll suggest the first automation to build.</p>
+      <a class="mail" href="mailto:markjezer.dahuya@outlook.com?subject=Automation%20for%20my%20salon">markjezer.dahuya@outlook.com</a>
+    </section>
+  </div>
+
+  <div class="wrap">
+    <footer class="foot">Mark Dahuya. AI automation for salons, barbershops and spas. Bloom Studio is a fictional business and all figures come from test data.</footer>
+  </div>
+</main>
+
+<script>
+(function () {
+  var S = {
+    price: {
+      who: 'Lena, via the website form',
+      msg: 'Hi! How much is balayage with a cut? Can I come this Saturday afternoon?',
+      category: 'Pricing and booking',
+      priority: 'Normal',
+      hot: false,
+      draft: "Hi Lena, thanks for reaching out to Bloom Studio!\n\nBalayage with a cut usually takes about three hours, and the final price depends on your hair length, which our stylist confirms at the start of your visit. We have Saturday openings at 1:30 pm and 3:00 pm. Reply with the time you'd like and I'll hold it for you.\n\nBloom Studio",
+      alert: 'New pricing and booking inquiry from Lena. A draft reply is in Gmail, ready to send.'
+    },
+    complaint: {
+      who: 'Priya, via the website form',
+      msg: "I had a keratin treatment last week and my hair feels dry and straw-like. I'm really disappointed.",
+      category: 'Complaint',
+      priority: 'Urgent',
+      hot: true,
+      draft: "Hi Priya, I'm sorry your hair doesn't feel the way it should after your keratin treatment. That isn't the result we want for you.\n\nCould you tell us which day you visited and, if you're comfortable, send a photo? Our senior stylist would like to take a look and offer a follow-up appointment this week.\n\nBloom Studio",
+      alert: 'Urgent: complaint from Priya about a keratin treatment. Please call her today. A draft reply is in Gmail.'
+    },
+    event: {
+      who: 'Sofia, via the website form',
+      msg: 'Do you do bridal trials? My wedding is in March and I need hair and makeup for 5 people.',
+      category: 'Event lead (bridal)',
+      priority: 'High value',
+      hot: true,
+      draft: "Hi Sofia, congratulations! Yes, we do bridal trials, and we can plan hair and makeup for your group of five. A trial usually takes about two hours.\n\nCould you share your wedding date and venue? I'll send available trial times and a package outline today.\n\nBloom Studio",
+      alert: 'High-value lead: bridal party of 5, wedding in March. Reply today.'
+    }
+  };
+
+  var steps = document.querySelectorAll('#steps li');
+  var msgWho = document.getElementById('msg-who');
+  var msgText = document.getElementById('msg-text');
+  var out = document.getElementById('out');
+  var runBtn = document.getElementById('run');
+  var statusEl = document.getElementById('status');
+  var radios = document.querySelectorAll('input[name="sc"]');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var EMPTY = 'Press the button to see what the owner receives.';
+
+  function wait(ms) { return new Promise(function (r) { setTimeout(r, reduce ? 0 : ms); }); }
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text !== undefined) n.textContent = text;
+    return n;
+  }
+  function selected() { return S[document.querySelector('input[name="sc"]:checked').value]; }
+  function block(title, node) {
+    var b = el('div', 'block');
+    b.appendChild(el('h4', '', title));
+    b.appendChild(node);
+    out.appendChild(b);
+  }
+  function reset() {
+    steps.forEach(function (li) { li.setAttribute('data-state', 'idle'); });
+    out.textContent = '';
+    out.appendChild(el('p', 'empty', EMPTY));
+    statusEl.textContent = '';
+    runBtn.textContent = 'Run the automation';
+  }
+  function showMessage() {
+    var s = selected();
+    msgWho.textContent = s.who;
+    msgText.textContent = s.msg;
+    reset();
+  }
+  function setBusy(b) {
+    runBtn.disabled = b;
+    radios.forEach(function (r) { r.disabled = b; });
+  }
+
+  async function run() {
+    var s = selected();
+    setBusy(true);
+    reset();
+    out.textContent = '';
+    runBtn.textContent = 'Running';
+    for (var i = 0; i < steps.length; i++) {
+      steps[i].setAttribute('data-state', 'running');
+      await wait(750);
+      steps[i].setAttribute('data-state', 'done');
+      if (i === 2) {
+        var tags = el('div');
+        tags.appendChild(el('span', 'chip', s.category));
+        tags.appendChild(el('span', s.hot ? 'chip hot' : 'chip', 'Priority: ' + s.priority));
+        block('Sorted as', tags);
+      }
+      if (i === 3) { block('Draft reply saved in Gmail', el('p', 'draft', s.draft)); }
+      if (i === 5) { block('Slack message to the owner', el('p', 'alert', s.alert)); }
+    }
+    statusEl.textContent = 'Finished. The inquiry was sorted, a draft reply was saved and the owner was alerted.';
+    runBtn.textContent = 'Run it again';
+    setBusy(false);
+    runBtn.focus();
+  }
+
+  radios.forEach(function (r) { r.addEventListener('change', showMessage); });
+  runBtn.addEventListener('click', run);
+  showMessage();
+})();
+</script>
+</body>
+</html>
